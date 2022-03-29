@@ -4,24 +4,14 @@ from api.models.quote import QuoteModel
 
 
 class QuoteResource(Resource):
-    def get(self, author_id=None, quote_id=None):
-        """
-        Обрабатываем GET запросы
-        :param author_id: id автора
-        :param quote_id: id цитаты
-        :return: http-response(json, статус)
-        """
-        if author_id is None and quote_id is None:  # Если запрос приходит по url: /quotes
-            quotes = QuoteModel.query.all()
-            return [quote.to_dict() for quote in quotes]  # Возвращаем ВСЕ цитаты
-
+    def get(self, author_id, quote_id):
         author = AuthorModel.query.get(author_id)
         if quote_id is None:  # Если запрос приходит по url: /authors/<int:author_id>/quotes
             quotes = author.quotes.all()
             return [quote.to_dict() for quote in quotes], 200  # Возвращаем все цитаты автора
 
-        quote = QuoteModel.query.get(id)
-        if quote is None:
+        quote = QuoteModel.query.get(quote_id)
+        if quote:
             return quote.to_dict(), 200
         return {"Error": "Quote not found"}, 404
 
@@ -30,7 +20,7 @@ class QuoteResource(Resource):
         parser.add_argument("text", required=True)
         quote_data = parser.parse_args()
         # TODO: раскомментируйте строку ниже, чтобы посмотреть quote_data
-        #   print(f"{quote_data=}")
+        print(f"{quote_data=}")
         author = AuthorModel.query.get(author_id)
         if author is None:
             return {"Error": f"Author id={author_id} not found"}, 404
@@ -52,5 +42,21 @@ class QuoteResource(Resource):
         db.session.commit()
         return quote.to_dict(), 200
 
-    def delete(self, quote_id):
-        raise NotImplemented("Метод не реализован")
+    def delete(self, author_id=None, quote_id=None):
+        author = AuthorModel.query.get(author_id)
+        quote = QuoteModel.query.get(quote_id)
+        if author is None:
+            return {"Error": f"Author with  id={author_id} not found"}, 404
+        if quote is None:
+            return {"Error": f"Quote with  id={quote_id} not found"}, 404
+        db.session.delete(quote)
+        db.session.commit()
+        return f"Quote with id={quote_id} is deleted.", 200
+
+    # raise NotImplemented("Метод не реализован")
+
+
+class QuotesListResource(Resource):
+    def get(self):
+        quotes = QuoteModel.query.all()
+        return [quote.to_dict() for quote in quotes]  # Возвращаем ВСЕ цитаты
