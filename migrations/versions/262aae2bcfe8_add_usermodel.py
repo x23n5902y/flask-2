@@ -1,8 +1,8 @@
-"""initial
+"""add userModel
 
-Revision ID: ab7cd3fd73ae
+Revision ID: 262aae2bcfe8
 Revises: 
-Create Date: 2022-03-29 20:46:28.062289
+Create Date: 2022-03-29 21:18:18.091101
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'ab7cd3fd73ae'
+revision = '262aae2bcfe8'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -21,7 +21,7 @@ def upgrade():
     op.create_table('author_model',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=32), nullable=True),
-    sa.Column('surname', sa.String(length=32), nullable=True),
+    sa.Column('surname', sa.String(length=64), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('quote_model',
