@@ -1,5 +1,6 @@
 from api import Resource, reqparse, db
 from api.models.author import AuthorModel
+from api.schemas.author import author_schema, authors_schema
 
 
 # GET /authors/1 - author by id
@@ -8,7 +9,7 @@ class AuthorResource(Resource):
         # Если запрос приходит по url: /authors/<int:author_id>
         author = AuthorModel.query.get(author_id)
         if author:
-            return author.to_dict(), 200
+            return author_schema.dump(author), 200
         return f"Author id={author_id} not found", 404
 
     def put(self, author_id):
@@ -20,7 +21,7 @@ class AuthorResource(Resource):
             return {"Error": f"Author id={author_id} not found"}, 404
         author.name = author_data["name"]
         db.session.commit()
-        return author.to_dict(), 200
+        return author_schema.dump(author), 200
 
     def delete(self, quote_id):
 
