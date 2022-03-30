@@ -27,7 +27,7 @@ class QuoteResource(Resource):
         quote.text = new_data["text"]
         quote.raiting = new_data["raiting"]
         db.session.commit()
-        return quote.to_dict(), 200
+        return quote_schema.dump(quote), 200
 
     def delete(self, author_id=None, quote_id=None):
         author = AuthorModel.query.get(author_id)
