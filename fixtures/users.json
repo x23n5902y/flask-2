@@ -1,0 +1,19 @@
+{
+  "model": "UserModel",
+  "records": [
+    {
+      "username": "admin",
+      "password": "admin",
+      "role": "admin"
+    },
+    {
+      "username": "Ivan",
+      "password": "ivan"
+    },
+    {
+      "username": "Petr",
+      "password": "petr"
+    }
+  ]
+}
+
